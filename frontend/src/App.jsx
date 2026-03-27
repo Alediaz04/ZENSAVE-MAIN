@@ -1,10 +1,12 @@
+// frontend/src/App.jsx
 import React, { useState, useCallback } from 'react';
 import { XOConnectProvider } from 'xo-connect';
-import ChatDashboard from './components/ChatDashboard';
+import ChatDashboard from './components/ChatDashboard.jsx';
 import VaultScreen from './components/VaultScreen';
 import StatsScreen from './components/StatsScreen';
 import SettingsScreen from './components/SettingsScreen';
 import XOAutoConnect from './components/XOAutoConnect';
+import { VaultProvider } from './context/VaultContext';
 import './App.css';
 
 const RSK_TESTNET_HEX = '0x1f'; 
@@ -22,22 +24,24 @@ function App() {
   return (
     <div className="mobile-frame">
       <XOAutoConnect onConnect={handleAutoConnect} />
-      <div className="app-container">
-        {currentView === 'chat' && (
-          <ChatDashboard 
-            onNavigate={setCurrentView} 
-            userAddress={userData.address} 
-            userData={userData} 
-          />
-        )}
-        {currentView === 'vaults' && (
-          <VaultScreen onNavigate={setCurrentView} userAddress={userData.address} />
-        )}
-        {currentView === 'stats' && <StatsScreen onNavigate={setCurrentView} />}
-        {currentView === 'settings' && (
-            <SettingsScreen onNavigate={setCurrentView} userData={userData} />
-        )}
-      </div>
+      <VaultProvider>
+        <div className="app-container">
+          {currentView === 'chat' && (
+            <ChatDashboard 
+              onNavigate={setCurrentView} 
+              userAddress={userData.address} 
+              userData={userData} 
+            />
+          )}
+          {currentView === 'vaults' && (
+            <VaultScreen onNavigate={setCurrentView} userAddress={userData.address} />
+          )}
+          {currentView === 'stats' && <StatsScreen onNavigate={setCurrentView} />}
+          {currentView === 'settings' && (
+              <SettingsScreen onNavigate={setCurrentView} userData={userData} />
+          )}
+        </div>
+      </VaultProvider>
     </div>
   );
 }

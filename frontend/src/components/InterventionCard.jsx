@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ethers } from 'ethers';
-import { XOConnectProvider } from 'xo-connect';
+import { XOConnect } from 'xo-connect';
+import { VaultContext } from '../context/VaultContext';
 
 const CONTRACT_ADDRESS = '0xCC4884c86C6D26F35ac1bA95DbE060b0BBDB7831';
-const RSK_TESTNET_HEX = '0x1f';
-const RSK_RPC_URL = 'https://public-node.testnet.rsk.co';
 
 const ABI = [
   "function deposit() external payable",
@@ -15,43 +14,67 @@ const ABI = [
 function InterventionCard({ emotionText, proposalText, monto_dca }) {
   const [status, setStatus] = useState('idle');
   const [txHash, setTxHash] = useState(null);
+  const [errorMsg, setErrorMsg] = useState('');
+  
+  // NUEVO: Estado para que el usuario pueda editar el monto
+  const [customAmount, setCustomAmount] = useState(monto_dca || '0.0001');
+  
+  const { addVault } = useContext(VaultContext);
 
   const handleExecute = async () => {
+    if (!customAmount || parseFloat(customAmount) <= 0) {
+      setErrorMsg('Ingresa un monto válido mayor a 0');
+      return;
+    }
+
     setStatus('loading');
+    setErrorMsg('');
     try {
-      // Conectamos con Beexo via XOConnect
-      const provider = new XOConnectProvider({
-        defaultChainId: RSK_TESTNET_HEX,
-        rpcs: { [RSK_TESTNET_HEX]: RSK_RPC_URL },
+      const client = await XOConnect.getClient();
+      
+      if (!client || !client.currencies || client.currencies.length === 0) {
+        throw new Error("No hay sesión activa en Beexo.");
+      }
+
+      const currency = client.currencies[0];
+      const iface = new ethers.Interface(ABI);
+      const data = iface.encodeFunctionData("deposit");
+      
+      // Usamos el monto que el usuario ingresó en el input
+      const valueWei = ethers.parseEther(customAmount.toString());
+      const valueHex = "0x" + valueWei.toString(16);
+
+      XOConnect.sendRequest({
+        method: 'transactionSign',
+        currency: currency.id,
+        data: {
+          from: currency.address,
+          to: CONTRACT_ADDRESS,
+          value: valueHex,
+          data: data
+        },
+        onSuccess: (response) => {
+          setTxHash(response);
+          setStatus('success');
+          addVault({
+            id: Date.now(),
+            title: "Reto Personalizado",
+            lockedAmount: `${customAmount} RBTC`,
+            rawAmount: parseFloat(customAmount),
+            assetPurchased: "RBTC",
+            progressPercent: 10,
+            statusText: "Iniciando ahorro...",
+            isActive: true
+          });
+        },
+        onCancel: () => {
+          setErrorMsg("Transacción cancelada por el usuario");
+          setStatus('error');
+        }
       });
 
-      // Pedimos permiso para firmar
-      await provider.request({ method: 'eth_requestAccounts' });
-
-      // Creamos el signer con ethers
-      const ethersProvider = new ethers.BrowserProvider(provider);
-      const signer = await ethersProvider.getSigner();
-
-      // Conectamos al contrato
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-
-      // Convertimos el monto DCA de DoC a wei (usamos monto_dca o 0.0001 RBTC por defecto)
-      const montoRBTC = '0.0001';
-      const value = ethers.parseEther(montoRBTC);
-
-      console.log(`Depositando ${montoRBTC} RBTC en ZenSave...`);
-
-      // Ejecutamos deposit() en el contrato
-      const tx = await contract.deposit({ value });
-      console.log('TX enviada:', tx.hash);
-      setTxHash(tx.hash);
-
-      // Esperamos confirmación
-      await tx.wait();
-      setStatus('success');
-
     } catch (error) {
-      console.error("Transacción rechazada o fallida:", error);
+      setErrorMsg(error?.message || String(error));
       setStatus('error');
     }
   };
@@ -72,20 +95,34 @@ function InterventionCard({ emotionText, proposalText, monto_dca }) {
 
       <div className="intervention-footer">
         {status === 'idle' && (
-          <button className="btn-execute" onClick={handleExecute}>
-            Aceptar Reto (Ejecutar DCA)
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {/* NUEVO: Input para que el usuario elija el monto a guardar */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <label style={{ fontSize: '14px', color: '#ccc' }}>Monto (RBTC):</label>
+              <input 
+                type="number" 
+                step="0.0001"
+                value={customAmount} 
+                onChange={(e) => setCustomAmount(e.target.value)}
+                style={{ flex: 1, padding: '8px', borderRadius: '5px', border: '1px solid #444', backgroundColor: '#222', color: 'white' }}
+              />
+            </div>
+            
+            <button className="btn-execute" onClick={handleExecute}>
+              Aceptar Reto y Guardar
+            </button>
+          </div>
         )}
 
         {status === 'loading' && (
           <button className="btn-execute loading" disabled>
-            <span className="spinner"></span> Firmando en Rootstock...
+            <span className="spinner"></span> Firmando depósito en Beexo...
           </button>
         )}
 
         {status === 'success' && (
           <div className="success-message">
-            <span>✅</span> ¡Reto activo! Fondos asegurados en Rootstock.
+            <span>✅</span> ¡Reto activo! Fondos depositados.
             {txHash && (
               <a 
                 href={`https://explorer.testnet.rsk.co/tx/${txHash}`}
@@ -101,7 +138,7 @@ function InterventionCard({ emotionText, proposalText, monto_dca }) {
 
         {status === 'error' && (
           <div className="error-message">
-            <span>❌</span> Transacción cancelada. Intenta de nuevo.
+            <span>❌</span> Error: {errorMsg}
           </div>
         )}
       </div>
