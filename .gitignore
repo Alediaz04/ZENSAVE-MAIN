@@ -19,6 +19,8 @@
 # Hardhat coverage reports
 /coverage
 /build
-/backend/.envS
+# Variables de entorno
+.env
+backend/.env
 
 /.env
