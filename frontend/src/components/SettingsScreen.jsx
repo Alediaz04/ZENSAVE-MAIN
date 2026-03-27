@@ -78,8 +78,8 @@ function SettingsScreen({ onNavigate, userData }) {
 
       <nav className="app-bottom-nav">
         <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); onNavigate('vaults'); }}><div className="dashed-circle">🏛️</div><span>Bóvedas</span></a>
-        <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); onNavigate('chat'); }}><div className="dashed-circle chat-icon">💬</div><span>Chat</span></a>
-        <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); onNavigate('stats'); }}><div className="dashed-circle">📊</div><span>Estadísticas</span></a>
+        <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); onNavigate('chat'); }}><div className="dashed-circle">💬</div><span>Chat</span></a>
+        <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); onNavigate('market'); }}><div className="dashed-circle">📈</div><span>Mercado</span></a>
         <a href="#" className="nav-item active" onClick={(e) => { e.preventDefault(); }}><div className="dashed-circle">⚙️</div><span>Ajustes</span></a>
       </nav>
     </section>

@@ -820,3 +820,74 @@ body {
 .btn-logout:hover {
     background-color: rgba(255, 82, 82, 0.1);
 }
+
+
+
+
+
+/* =========================================
+   PANTALLA: MERCADO (MarketScreen)
+   ========================================= */
+.market-card {
+    background-color: #1A1D21;
+    border-radius: 20px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #2A2E33;
+}
+
+.market-card-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.coin-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.coin-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.coin-info h3 {
+    font-size: 15px;
+    color: var(--text-white);
+    margin: 0;
+    font-weight: 500;
+}
+
+.coin-info span {
+    font-size: 12px;
+    color: var(--text-hint);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.market-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.coin-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-white);
+    margin-bottom: 2px;
+}
+
+.text-green-500 { color: #00E676; }
+.text-red-500 { color: #FF5252; }
+.text-gray-500 { color: #888888; }

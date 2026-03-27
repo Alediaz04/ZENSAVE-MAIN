@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import { XOConnectProvider } from 'xo-connect';
 import ChatDashboard from './components/ChatDashboard.jsx';
 import VaultScreen from './components/VaultScreen';
-import StatsScreen from './components/StatsScreen';
+import MarketScreen from './components/MarketScreen';
 import SettingsScreen from './components/SettingsScreen';
 import XOAutoConnect from './components/XOAutoConnect';
 import { VaultProvider } from './context/VaultContext';
@@ -36,7 +36,9 @@ function App() {
           {currentView === 'vaults' && (
             <VaultScreen onNavigate={setCurrentView} userAddress={userData.address} />
           )}
-          {currentView === 'stats' && <StatsScreen onNavigate={setCurrentView} />}
+          {currentView === 'market' && (
+          <MarketScreen onNavigate={setCurrentView} /> // <-- AÑADIDO
+           )}
           {currentView === 'settings' && (
               <SettingsScreen onNavigate={setCurrentView} userData={userData} />
           )}
