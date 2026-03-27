@@ -17,18 +17,17 @@ function ChatDashboard({ onNavigate, userAddress, userData }) {
     setIsTyping(true);
     setCurrentChallenge(null);
     try {
-        const response = await fetch('https://meaty-unreferenced-dimple.ngrok-free.dev/api/analyze', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true'
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ message: userText })
       });
       if (!response.ok) throw new Error("Error en el servidor");
       const data = await response.json();
       setCurrentChallenge(data);
-    }  catch (error) {
+    } catch (error) {
       console.error("Error conectando con Flask:", error);
       setMessages(prev => [...prev, { 
         type: 'ai', 
@@ -44,7 +43,6 @@ function ChatDashboard({ onNavigate, userAddress, userData }) {
     return `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
   };
 
-  // ✅ Nombre a mostrar — alias tiene prioridad, luego dirección, luego "Conectando..."
   const displayName = userData?.alias
     ? `@${userData.alias}`
     : userAddress

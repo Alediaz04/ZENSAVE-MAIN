@@ -19,6 +19,6 @@
 # Hardhat coverage reports
 /coverage
 /build
-
+/backend/.envS
 
 /.env
