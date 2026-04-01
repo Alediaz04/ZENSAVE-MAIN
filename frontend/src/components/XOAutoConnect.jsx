@@ -5,7 +5,7 @@ export default function XOAutoConnect({ onConnect }) {
   useEffect(() => {
     const autoConnect = async () => {
       try {
-        // Usamos XOConnect.connect() directamente — método principal del singleton
+        //uso de XOConect para conectar con Beexo
         const result = await XOConnect.connect();
         
         console.log("XOConnect.connect() resultado:", JSON.stringify(result));
@@ -17,7 +17,6 @@ export default function XOAutoConnect({ onConnect }) {
             image: result.client.image || null,
           });
         } else {
-          // Intentamos getClient por si ya estaba conectado
           const client = await XOConnect.getClient();
           console.log("XOConnect.getClient() resultado:", JSON.stringify(client));
           

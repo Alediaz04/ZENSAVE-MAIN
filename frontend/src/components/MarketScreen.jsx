@@ -7,11 +7,9 @@ function MarketScreen({ onNavigate }) {
     rif: { price: 0, change: 0 },
   });
   const [loading, setLoading] = useState(true);
-
-  // 🚀 MAGIA SENIOR: Usando Binance API (Más rápida y sin bloqueos)
+ /*Consumo de API de Binance*/
   const fetchBinancePrices = async () => {
     try {
-      // Hacemos las dos peticiones a Binance al mismo tiempo para que cargue más rápido
       const [btcResponse, rifResponse] = await Promise.all([
         fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT'),
         fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=RIFUSDT')
@@ -21,17 +19,15 @@ function MarketScreen({ onNavigate }) {
       const rifData = await rifResponse.json();
 
       setPrices({
-        // RBTC está pegado 1:1 a Bitcoin
         rbtc: { 
             price: parseFloat(btcData.lastPrice), 
             change: parseFloat(btcData.priceChangePercent) 
         },
-        // DOC es una Stablecoin (siempre 1 USD)
         doc: { 
             price: 1.00, 
             change: 0.0 
         },
-        // RIF token
+        
         rif: { 
             price: parseFloat(rifData.lastPrice), 
             change: parseFloat(rifData.priceChangePercent) 
@@ -47,7 +43,7 @@ function MarketScreen({ onNavigate }) {
 
   useEffect(() => {
     fetchBinancePrices();
-    // Actualiza cada 10 segundos para dar un efecto de "Tiempo Real" brutal en la demo
+    
     const interval = setInterval(fetchBinancePrices, 10000);
     return () => clearInterval(interval);
   }, []);

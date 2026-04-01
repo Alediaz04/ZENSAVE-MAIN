@@ -4,7 +4,7 @@ import InterventionCard from './InterventionCard';
 function ChatDashboard({ onNavigate, userAddress, userData }) {
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState([
-    { type: 'ai', text: "¡Hola! Soy Zen. ¿En qué gastaste hoy?" }
+    { type: 'ai', text: "¡Hola! Soy Zen. Tu asistente financiero ¿En qué gastaste hoy?" }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [currentChallenge, setCurrentChallenge] = useState(null);
@@ -53,12 +53,14 @@ function ChatDashboard({ onNavigate, userAddress, userData }) {
     <section className="app-screen active chat-screen">
       <header className="app-header">
         <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+           
           <img 
             src={`https://api.dicebear.com/7.x/identicon/svg?seed=${userData?.alias || userAddress || 'guest'}`} 
             alt="Avatar" 
             className="user-avatar" 
             style={{ borderRadius: '50%', width: '40px', border: '2px solid #00E676' }} 
           />
+
         </div>
         <div className="header-center">
           <span className="balance-label">SESIÓN ACTIVA</span>
@@ -75,8 +77,8 @@ function ChatDashboard({ onNavigate, userAddress, userData }) {
       </header>
 
       <div className="chat-title-area">
-        <h2>Oráculo AI</h2>
-        <p>Tu guía de bienestar financiero</p>
+        <h2>ZEN SAVE AI</h2>
+        <p>Tu Asesor de bienestar financiero</p>
       </div>
 
       <main className="chat-container">

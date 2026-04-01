@@ -16,7 +16,6 @@ function InterventionCard({ emotionText, proposalText, monto_dca }) {
   const [txHash, setTxHash] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   
-  // NUEVO: Estado para que el usuario pueda editar el monto
   const [customAmount, setCustomAmount] = useState(monto_dca || '0.0001');
   
   const { addVault } = useContext(VaultContext);
@@ -96,7 +95,7 @@ function InterventionCard({ emotionText, proposalText, monto_dca }) {
       <div className="intervention-footer">
         {status === 'idle' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {/* NUEVO: Input para que el usuario elija el monto a guardar */}
+            {/*Input para el usuario*/}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <label style={{ fontSize: '14px', color: '#ccc' }}>Monto (RBTC):</label>
               <input 
@@ -109,7 +108,7 @@ function InterventionCard({ emotionText, proposalText, monto_dca }) {
             </div>
             
             <button className="btn-execute" onClick={handleExecute}>
-              Aceptar Reto y Guardar
+              Aceptar Reto y Guardar En Boveda
             </button>
           </div>
         )}
@@ -122,7 +121,7 @@ function InterventionCard({ emotionText, proposalText, monto_dca }) {
 
         {status === 'success' && (
           <div className="success-message">
-            <span>✅</span> ¡Reto activo! Fondos depositados.
+            <span>✅</span> ¡Tu Reto esta activo! Fondos depositados.
             {txHash && (
               <a 
                 href={`https://explorer.testnet.rsk.co/tx/${txHash}`}
@@ -130,8 +129,9 @@ function InterventionCard({ emotionText, proposalText, monto_dca }) {
                 rel="noreferrer"
                 style={{ display: 'block', fontSize: '11px', color: '#00E676', marginTop: '6px' }}
               >
-                Ver transacción ↗
-              </a>
+                Ver transacción ↗       
+              </a>    
+              // No disponible para ver 
             )}
           </div>
         )}

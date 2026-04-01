@@ -1,4 +1,4 @@
-// frontend/src/App.jsx
+
 import React, { useState, useCallback } from 'react';
 import { XOConnectProvider } from 'xo-connect';
 import ChatDashboard from './components/ChatDashboard.jsx';
@@ -37,7 +37,7 @@ function App() {
             <VaultScreen onNavigate={setCurrentView} userAddress={userData.address} />
           )}
           {currentView === 'market' && (
-          <MarketScreen onNavigate={setCurrentView} /> // <-- AÑADIDO
+          <MarketScreen onNavigate={setCurrentView} /> 
            )}
           {currentView === 'settings' && (
               <SettingsScreen onNavigate={setCurrentView} userData={userData} />

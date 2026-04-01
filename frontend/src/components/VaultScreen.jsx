@@ -10,7 +10,6 @@ const ABI = [
 ];
 
 function VaultScreen({ onNavigate }) {
-  // Ahora traemos removeVault del contexto
   const { vaults, removeVault } = useContext(VaultContext);
   const [withdrawingId, setWithdrawingId] = useState(null);
 
@@ -18,7 +17,6 @@ function VaultScreen({ onNavigate }) {
     .filter(v => v.isActive && v.rawAmount)
     .reduce((total, current) => total + current.rawAmount, 0);
 
-  // NUEVO: Función para retirar los fondos del contrato inteligente
   const handleWithdraw = async (vault) => {
     setWithdrawingId(vault.id);
     try {
@@ -31,7 +29,6 @@ function VaultScreen({ onNavigate }) {
       const currency = client.currencies[0];
       const iface = new ethers.Interface(ABI);
       
-      // Convertimos el monto de la bóveda a Wei para que el contrato lo entienda
       const amountWei = ethers.parseEther(vault.rawAmount.toString());
       const data = iface.encodeFunctionData("withdraw", [amountWei]);
 
@@ -41,12 +38,12 @@ function VaultScreen({ onNavigate }) {
         data: {
           from: currency.address,
           to: CONTRACT_ADDRESS,
-          value: "0x0", // Al retirar, no enviamos RBTC de nuestra wallet, así que es 0
+          value: "0x0", 
           data: data
         },
         onSuccess: (response) => {
           console.log("Retiro exitoso TX:", response);
-          // Eliminamos la bóveda de la pantalla porque el dinero ya regresó a la wallet
+          
           removeVault(vault.id);
           setWithdrawingId(null);
         },
@@ -105,7 +102,7 @@ function VaultScreen({ onNavigate }) {
                 </div>
               </div>
 
-              {/* NUEVO: Botón para retirar fondos */}
+              {/*BOton para retirar fondos*/ }
               <div style={{ marginTop: '15px' }}>
                 <button 
                   onClick={() => handleWithdraw(vault)}

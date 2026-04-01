@@ -5,19 +5,16 @@ import os
 import json
 from dotenv import load_dotenv
 
-# Cargar variables de entorno (API Key)
+
 load_dotenv()
 
 app = Flask(__name__)
-# Habilitar CORS para permitir peticiones desde el frontend en React
 CORS(app)
 
 # Configurar la API de Gemini
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# =================================================================
-# MAGIA DE SENIOR: Autodetectar el modelo correcto para tu API Key
-# =================================================================
+#detectar modelo de lenguaje
 print("🔍 Verificando modelos habilitados en tu cuenta de Google...")
 AVAILABLE_MODEL = "gemini-1.5-flash" # Fallback por defecto
 
@@ -30,10 +27,10 @@ try:
 except Exception as e:
     print(f"⚠️ No se pudo listar modelos, intentando fallback... Error: {e}")
 
-# Inicializar modelo
+# Iniciar modelo de lenguaje
 model = genai.GenerativeModel(AVAILABLE_MODEL)
 
-# Cerebro
+# Prompt de ia
 SYSTEM_PROMPT = """
 Eres 'Zen', un terapeuta financiero empático y experto en Web3 (red Rootstock).
 El usuario te compartirá un gasto que acaba de realizar.
